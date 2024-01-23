@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { Search } from "lucide-react";
+import { Loader2Icon, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { wordpressCSS } from "./WPcss";
 
@@ -23,6 +23,7 @@ const formSchema = z.object({
 
 export const UrlForm = () => {
 	const [htmlCode, setHtmlCode] = React.useState<string>("");
+	const [isStreaming, setIsStreaming] = React.useState<boolean>(false);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -42,11 +43,16 @@ export const UrlForm = () => {
 
 			if (!body) throw new Error("No body");
 
+			setIsStreaming(true);
+			setHtmlCode("");
 			const reader = body.getReader();
 
 			const getReaderChuck = async () => {
 				const { done, value } = await reader.read();
-				if (done) return;
+				if (done) {
+					setIsStreaming(false);
+					return;
+				}
 				const newPiece = new TextDecoder("utf-8").decode(value);
 				setHtmlCode((prev) => prev + newPiece);
 				await getReaderChuck();
@@ -94,9 +100,20 @@ export const UrlForm = () => {
 					</form>
 				</Form>
 			</div>
+			<div>
+				{isStreaming && (
+					<div className="flex items-center gap-x-2">
+						<div className="animate-spin">
+							<Loader2Icon className=" h-4 w-4 text-sky-600" />
+						</div>
+						<span>Your recipe is being translated...</span>
+					</div>
+				)}
+			</div>
+
 			<div className="mt-4 grow w-full">
 				<iframe
-					className="w-full h-full"
+					className="w-full h-full  max-w-2xl"
 					srcDoc={`<!DOCTYPE html>
                     <html lang="en">
                     <head>
