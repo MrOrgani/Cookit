@@ -2826,12 +2826,10 @@ a:where(:not(.wp-element-button)) {
 }
 
 @font-face {
-    font-family: Montserrat;
-    font-weight: 800;
-    font-style: normal;
-    font-stretch: normal;
-    font-display: swap;
-    src: url('https://www.budgetbytes.com/wp-content/themes/budgetbytes-2022/assets/fonts/montserrat-800.woff2') format('woff2')
+	font-family: "Montserrat";
+	src: url("/fonts/Montserrat-ExtraBold.otf") format("opentype");
+	font-weight: normal;
+	font-style: 800;
 }
 
 @font-face {
@@ -2840,7 +2838,7 @@ a:where(:not(.wp-element-button)) {
     font-style: italic;
     font-stretch: normal;
     font-display: swap;
-    src: url('https://www.budgetbytes.com/wp-content/themes/budgetbytes-2022/assets/fonts/montserrat-800italic.woff2') format('woff2')
+    src: url('fonts/Montserrat-Italic.ttf') format('ttf')
 }
 
 html {
