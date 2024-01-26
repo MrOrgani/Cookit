@@ -74,10 +74,3 @@
 		@apply bg-background text-foreground;
 	}
 }
-
-@font-face {
-	font-family: "Montserrat";
-	src: url("/fonts/Montserrat-ExtraBold.otf") format("opentype");
-	font-weight: normal;
-	font-style: 800;
-}
