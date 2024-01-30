@@ -1,4 +1,8 @@
 import { Montserrat } from "next/font/google";
+import { CopyImageToClipboardButton } from "./_components/copy-to-clipboard-button";
+import { DownloadImageButton } from "./_components/download-image-button";
+import { RecipeDisplay } from "./_components/recipe-display";
+import { StreamingLoader } from "./_components/streaming-loader";
 import { UrlForm } from "./_components/url-form";
 
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["800"] });
@@ -15,7 +19,12 @@ export default function Home() {
 					</span>
 					<span className={""}>COOK IT.</span>
 				</h1>
-				<UrlForm />
+				<UrlForm>
+					<CopyImageToClipboardButton />
+					<DownloadImageButton />
+				</UrlForm>
+				<StreamingLoader />
+				<RecipeDisplay />
 			</div>
 		</main>
 	);
