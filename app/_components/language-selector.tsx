@@ -5,7 +5,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { useUserPreferences } from "../hooks/use-user-preferences";
+import { Language, useUserPreferences } from "@/hooks/use-user-preferences";
 
 interface LanguageSelectorProps {}
 1;
@@ -19,13 +19,13 @@ export const LanguageSelector = ({}: LanguageSelectorProps) => {
 			Translate to:
 			<Select
 				value={selectedLanguage}
-				onValueChange={(lang) => setSelectedLanguage(lang)}
+				onValueChange={(lang: Language) => setSelectedLanguage(lang)}
 			>
 				<SelectTrigger
 					className={"w-full mt-2 shadow-[3px_3px_0px_rgba(0,0,0,1)]"}
 				>
 					<SelectValue
-						placeholder="Select a verified email to display"
+						placeholder="Select a language to translate to"
 						defaultValue={"fr"}
 					/>
 				</SelectTrigger>

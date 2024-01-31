@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useStreamResponse } from "@/hooks/useStreamResponse";
 import html2canvas from "html2canvas";
 import { ImageDown } from "lucide-react";
 import { toast } from "sonner";
-import { useStreamResponse } from "../hooks/useStreamResponse";
 
 export const DownloadImageButton = () => {
 	const htmlCode = useStreamResponse((state) => state.htmlCode);

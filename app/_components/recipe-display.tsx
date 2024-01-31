@@ -1,7 +1,7 @@
 "use client";
 
-import { useStreamResponse } from "../hooks/useStreamResponse";
-import { useTimedState } from "../hooks/useTimedState";
+import { useStreamResponse } from "@/hooks/useStreamResponse";
+import { useTimedState } from "@/hooks/useTimedState";
 import { wordpressCSS } from "./wordpress-css";
 
 export const RecipeDisplay = () => {
