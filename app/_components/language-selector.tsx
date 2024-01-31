@@ -5,18 +5,22 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useUserPreferences } from "../hooks/use-user-preferences";
 
 interface LanguageSelectorProps {}
 1;
 
 export const LanguageSelector = ({}: LanguageSelectorProps) => {
-	const [language, setLanguage] = useState("fr");
+	const selectedLanguage = useUserPreferences((state) => state.language);
+	const setSelectedLanguage = useUserPreferences((state) => state.setLanguage);
 
 	return (
 		<div>
 			Translate to:
-			<Select value={language} onValueChange={(lang) => setLanguage(lang)}>
+			<Select
+				value={selectedLanguage}
+				onValueChange={(lang) => setSelectedLanguage(lang)}
+			>
 				<SelectTrigger
 					className={"w-full mt-2 shadow-[3px_3px_0px_rgba(0,0,0,1)]"}
 				>
