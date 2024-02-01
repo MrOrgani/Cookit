@@ -42,7 +42,7 @@ Response format:
 - You never add any comments in the code
 `;
 
-// export const runtime = "edge";
+export const runtime = "edge";
 // export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
