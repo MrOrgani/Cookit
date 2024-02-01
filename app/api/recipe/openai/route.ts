@@ -2,7 +2,6 @@ import { OpenAIStream, StreamingTextResponse } from "ai";
 import axios from "axios";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 import jsdom from "jsdom";
 const { JSDOM } = jsdom;
@@ -47,12 +46,23 @@ Response format:
 - You never add any comments in the code
 `;
 
-let messages: ChatCompletionMessageParam[] = [
-	{
-		role: "system",
-		content: SYSTEM_PROMPT,
-	},
-];
+export const runtime = "edge";
+export const dynamic = "force-dynamic";
+
+const getRecipeDivToTranslate = async (url: string) => {
+	const fetchedRecipeWebsite = (await axios.get(url)).data;
+
+	// Create a virtual DOM using jsdom
+	const dom = new JSDOM(fetchedRecipeWebsite);
+	const document = dom.window.document;
+
+	// Retrieve the div with a particular id
+	const myDiv = document.querySelector("[id^='wprm-recipe-container-']");
+
+	const myDivString = myDiv?.outerHTML || "";
+
+	return myDivString;
+};
 
 export async function POST(req: Request) {
 	try {
@@ -70,16 +80,7 @@ export async function POST(req: Request) {
 		}
 		const openai = new OpenAI({ apiKey: apikey });
 
-		const fetchedRecipeWebsite = (await axios.get(url)).data;
-
-		// Create a virtual DOM using jsdom
-		const dom = new JSDOM(fetchedRecipeWebsite);
-		const document = dom.window.document;
-
-		// Retrieve the div with a particular id
-		const myDiv = document.querySelector("[id^='wprm-recipe-container-']");
-
-		const myDivString = myDiv?.outerHTML || "";
+		const recipeAsHtml = await getRecipeDivToTranslate(url);
 
 		const res = await openai.chat.completions.create({
 			model: "gpt-4-1106-preview",
@@ -92,7 +93,7 @@ export async function POST(req: Request) {
 					- Desired units: ${unit}
 					`,
 				},
-				{ role: "user", content: myDivString },
+				{ role: "user", content: recipeAsHtml },
 			],
 			stream: true,
 		});
