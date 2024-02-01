@@ -1,7 +1,7 @@
 "use client";
 
+import { useStreamResponse } from "@/store/use-stream-response";
 import { Loader2Icon } from "lucide-react";
-import { useStreamResponse } from "@/hooks/useStreamResponse";
 
 export const StreamingLoader = () => {
 	const isStreaming = useStreamResponse((state) => state.isStreaming);

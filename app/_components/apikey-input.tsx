@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useUserPreferences } from "@/hooks/use-user-preferences";
 import { cn } from "@/lib/utils";
+import { useUserPreferences } from "@/store/use-user-preferences";
 
 interface ApikeyInputProps {}
 

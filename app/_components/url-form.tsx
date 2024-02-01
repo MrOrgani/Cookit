@@ -14,8 +14,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-import { useUserPreferences } from "@/hooks/use-user-preferences";
-import { useStreamResponse } from "@/hooks/useStreamResponse";
+import { useStreamResponse } from "@/store/use-stream-response";
+import { useUserPreferences } from "@/store/use-user-preferences";
 
 const formSchema = z.object({
 	url: z.string().url(),

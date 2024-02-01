@@ -5,7 +5,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Unit, useUserPreferences } from "@/hooks/use-user-preferences";
+import { Unit, useUserPreferences } from "@/store/use-user-preferences";
 
 interface UnitSelectorProps {}
 

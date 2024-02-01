@@ -6,7 +6,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { useUserPreferences } from "@/hooks/use-user-preferences";
+import { useUserPreferences } from "@/store/use-user-preferences";
 import { ApikeyInput } from "./apikey-input";
 import { LanguageSelector } from "./language-selector";
 import { UnitSelector } from "./unit-selector";

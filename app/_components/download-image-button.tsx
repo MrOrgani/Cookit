@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useStreamResponse } from "@/hooks/useStreamResponse";
+import { useStreamResponse } from "@/store/use-stream-response";
 import html2canvas from "html2canvas";
 import { ImageDown } from "lucide-react";
 import { toast } from "sonner";

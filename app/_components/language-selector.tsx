@@ -5,7 +5,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Language, useUserPreferences } from "@/hooks/use-user-preferences";
+import { Language, useUserPreferences } from "@/store/use-user-preferences";
 
 interface LanguageSelectorProps {}
 1;
