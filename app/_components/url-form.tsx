@@ -14,7 +14,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-import { useStreamResponse } from "../hooks/useStreamResponse";
+import { useUserPreferences } from "@/hooks/use-user-preferences";
+import { useStreamResponse } from "@/hooks/useStreamResponse";
 
 const formSchema = z.object({
 	url: z.string().url(),
@@ -29,6 +30,11 @@ export const UrlForm = ({ children }: UrlFormProps) => {
 	const removeHtmlCode = useStreamResponse((state) => state.removeHtmlCode);
 	const setIsStreaming = useStreamResponse((state) => state.setIsStreaming);
 
+	const apikey = useUserPreferences((state) => state.apiKey);
+	const language = useUserPreferences((state) => state.language);
+	const unit = useUserPreferences((state) => state.unit);
+	const setOpenSettings = useUserPreferences((state) => state.setOpenSettings);
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: { url: "" },
@@ -37,16 +43,23 @@ export const UrlForm = ({ children }: UrlFormProps) => {
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
 		try {
+			if (!apikey) {
+				toast.error("Please enter an API key");
+				setOpenSettings(true);
+				return;
+			}
+
 			const res = await fetch(`/api/recipe/openai`, {
 				method: "POST",
-				body: JSON.stringify(values),
+				body: JSON.stringify({ ...values, apikey, language, unit }),
 			});
-			toast.success("Recipe is being processed");
 
+			console.log(res);
 			const body = res.body;
 
-			if (!body) throw new Error("No body");
+			if (!res.ok || !body) throw new Error("Something went wrong");
 
+			toast.success("Recipe is being processed");
 			setIsStreaming(true);
 			removeHtmlCode();
 			const reader = body.getReader();
