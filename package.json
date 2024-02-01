@@ -50,6 +50,6 @@
 		"fs": false,
 		"path": false,
 		"os": false,
-		"http": false
+		"jsdom": false
 	}
 }
