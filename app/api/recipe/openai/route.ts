@@ -46,8 +46,8 @@ Response format:
 - You never add any comments in the code
 `;
 
-// export const runtime = "edge";
-export const dynamic = "force-dynamic";
+export const runtime = "edge";
+// export const dynamic = "force-dynamic";
 
 const getRecipeDivToTranslate = async (url: string) => {
 	console.log;
@@ -100,6 +100,8 @@ export async function POST(req: Request) {
 		});
 
 		const stream = OpenAIStream(res);
+
+		console.log("[RECIPE]", stream);
 
 		return new StreamingTextResponse(stream);
 	} catch (error: any) {
