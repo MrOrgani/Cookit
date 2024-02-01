@@ -56,12 +56,6 @@ let messages: ChatCompletionMessageParam[] = [
 
 export async function POST(req: Request) {
 	try {
-		if (!process.env.OPENAI_API_KEY) {
-			return new NextResponse("OPENAI_API_KEY is not set", {
-				status: 500,
-			});
-		}
-
 		const { url, apikey, language, unit } = await req.json();
 
 		if (!url) {
