@@ -41,7 +41,7 @@ export const UrlForm = ({ children }: UrlFormProps) => {
 	});
 	const { isValid, isSubmitting } = form.formState;
 
-	const onSubmit = async (values: z.infer<typeof formSchema>) => {
+	const onSubmit = async ({ url }: z.infer<typeof formSchema>) => {
 		try {
 			if (!apikey) {
 				toast.error("Please enter an API key");
@@ -49,12 +49,17 @@ export const UrlForm = ({ children }: UrlFormProps) => {
 				return;
 			}
 
+			const getRecipeResponse = await fetch("/api/recipe", {
+				method: "POST",
+				body: JSON.stringify({ url }),
+			});
+			const recipeAsHtmlText = await getRecipeResponse.json();
+
 			const res = await fetch(`/api/recipe/openai`, {
 				method: "POST",
-				body: JSON.stringify({ ...values, apikey, language, unit }),
+				body: JSON.stringify({ recipeAsHtmlText, apikey, language, unit }),
 			});
 
-			console.log(res);
 			const body = res.body;
 
 			if (!res.ok || !body) throw new Error("Something went wrong");

@@ -1,10 +1,6 @@
 import { OpenAIStream, StreamingTextResponse } from "ai";
-import axios from "axios";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-
-import jsdom from "jsdom";
-const { JSDOM } = jsdom;
 
 const languageObject = {
 	fr: "French",
@@ -46,34 +42,13 @@ Response format:
 - You never add any comments in the code
 `;
 
-export const runtime = "edge";
+// export const runtime = "edge";
 // export const dynamic = "force-dynamic";
-
-const getRecipeDivToTranslate = async (url: string) => {
-	console.log;
-	const fetchedRecipeWebsite = (await axios.get(url)).data;
-
-	// Create a virtual DOM using jsdom
-	const dom = new JSDOM(fetchedRecipeWebsite);
-	const document = dom.window.document;
-
-	// Retrieve the div with a particular id
-	const myDiv = document.querySelector("[id^='wprm-recipe-container-']");
-
-	const myDivString = myDiv?.outerHTML || "";
-
-	return myDivString;
-};
 
 export async function POST(req: Request) {
 	try {
-		const { url, apikey, language, unit } = await req.json();
+		const { recipeAsHtmlText, apikey, language, unit } = await req.json();
 
-		if (!url) {
-			return new NextResponse("URL is required", {
-				status: 500,
-			});
-		}
 		if (!apikey) {
 			return new NextResponse("You must provide an OpenAI API key", {
 				status: 500,
@@ -81,31 +56,27 @@ export async function POST(req: Request) {
 		}
 		const openai = new OpenAI({ apiKey: apikey });
 
-		const recipeAsHtml = await getRecipeDivToTranslate(url);
-
 		const res = await openai.chat.completions.create({
 			model: "gpt-4-1106-preview",
 			messages: [
 				{
 					role: "system",
 					content: `${SYSTEM_PROMPT}
-					Specifications: 
+					Specifications:
 					- Desired language: ${languageObject[language as keyof typeof languageObject]}
 					- Desired units: ${unit}
 					`,
 				},
-				{ role: "user", content: recipeAsHtml },
+				{ role: "user", content: recipeAsHtmlText },
 			],
 			stream: true,
 		});
 
 		const stream = OpenAIStream(res);
 
-		console.log("[RECIPE]", stream);
-
 		return new StreamingTextResponse(stream);
 	} catch (error: any) {
-		console.log("[RECIPE]", error);
+		console.log("[RECIPE OPENAI]", error);
 		return new NextResponse(error.message, {
 			status: 500,
 		});
