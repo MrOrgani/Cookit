@@ -106,7 +106,7 @@ export async function POST(req: Request) {
 		const stream = OpenAIStream(res);
 
 		return new StreamingTextResponse(stream);
-	} catch (error) {
+	} catch (error: any) {
 		console.log("[RECIPE]", error);
 		return new NextResponse(error.message, {
 			status: 500,
