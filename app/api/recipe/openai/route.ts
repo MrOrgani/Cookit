@@ -61,11 +61,8 @@ export async function POST(req: Request) {
 				status: 500,
 			});
 		}
-		// const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY ?? "" });
 
 		const { url, apikey, language, unit } = await req.json();
-
-		console.log({ url, apikey, language, unit });
 
 		if (!url) {
 			return new NextResponse("URL is required", {
