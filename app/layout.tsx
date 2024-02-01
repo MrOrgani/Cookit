@@ -1,3 +1,4 @@
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { Toaster } from "sonner";
@@ -34,6 +35,7 @@ export default function RootLayout({
 							<span className={""}>COOK IT.</span>
 						</h1>
 						{children}
+						<SpeedInsights />
 					</div>
 				</main>
 			</body>
