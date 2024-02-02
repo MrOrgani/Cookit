@@ -43,8 +43,8 @@ Response format:
 `;
 
 export const runtime = "edge";
-// export const dynamic = "force-dynamic";
 
+let controller: AbortController | null = null;
 export async function POST(req: Request) {
 	try {
 		const { recipeAsHtmlText, apikey, language, unit } = await req.json();
@@ -56,24 +56,30 @@ export async function POST(req: Request) {
 		}
 		const openai = new OpenAI({ apiKey: apikey });
 
-		const res = await openai.chat.completions.create({
-			model: "gpt-4-1106-preview",
-			messages: [
-				{
-					role: "system",
-					content: `${SYSTEM_PROMPT}
+		controller = new AbortController();
+
+		const res = await openai.chat.completions.create(
+			{
+				model: "gpt-4-1106-preview",
+				messages: [
+					{
+						role: "system",
+						content: `${SYSTEM_PROMPT}
 					Specifications:
 					- Desired language: ${languageObject[language as keyof typeof languageObject]}
 					- Desired units: ${unit}
 					`,
-				},
-				{ role: "user", content: recipeAsHtmlText },
-			],
-			stream: true,
-		});
+					},
+					{ role: "user", content: recipeAsHtmlText },
+				],
+				stream: true,
+			},
+			{
+				signal: controller.signal,
+			}
+		);
 
 		const stream = OpenAIStream(res);
-
 		return new StreamingTextResponse(stream);
 	} catch (error: any) {
 		console.log("[RECIPE OPENAI]", error);
@@ -81,4 +87,14 @@ export async function POST(req: Request) {
 			status: 500,
 		});
 	}
+}
+
+export function DELETE() {
+	if (controller) {
+		controller.abort();
+	}
+	controller = null;
+	return new NextResponse("Request aborted", {
+		status: 200,
+	});
 }
