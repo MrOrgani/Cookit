@@ -44,7 +44,6 @@ Response format:
 
 export const runtime = "edge";
 
-let controller: AbortController | null = null;
 export async function POST(req: Request) {
 	try {
 		const { recipeAsHtmlText, apikey, language, unit } = await req.json();
@@ -56,7 +55,7 @@ export async function POST(req: Request) {
 		}
 		const openai = new OpenAI({ apiKey: apikey });
 
-		controller = new AbortController();
+		// const controller = new AbortController();
 
 		const res = await openai.chat.completions.create(
 			{
@@ -73,10 +72,10 @@ export async function POST(req: Request) {
 					{ role: "user", content: recipeAsHtmlText },
 				],
 				stream: true,
-			},
-			{
-				signal: controller.signal,
 			}
+			// {
+			// 	signal: controller.signal,
+			// }
 		);
 
 		const stream = OpenAIStream(res);
@@ -89,19 +88,19 @@ export async function POST(req: Request) {
 	}
 }
 
-export function DELETE() {
-	try {
-		if (controller) {
-			controller.abort();
-			controller = null;
-		}
-		return new NextResponse("Request aborted", {
-			status: 200,
-		});
-	} catch (error: any) {
-		console.log("[OPENAI]: DELETE", error);
-		return new NextResponse(error.message, {
-			status: 500,
-		});
-	}
-}
+// export function DELETE() {
+// 	try {
+// 		if (controller) {
+// 			controller.abort();
+// 			controller = null;
+// 		}
+// 		return new NextResponse("Request aborted", {
+// 			status: 200,
+// 		});
+// 	} catch (error: any) {
+// 		console.log("[OPENAI]: DELETE", error);
+// 		return new NextResponse(error.message, {
+// 			status: 500,
+// 		});
+// 	}
+// }

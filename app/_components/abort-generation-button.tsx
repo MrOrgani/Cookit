@@ -1,16 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { useStreamResponse } from "@/store/use-stream-response";
-import { toast } from "sonner";
 
 interface AbortGenerationButtonProps {}
 
 export const AbortGenerationButton = ({}: AbortGenerationButtonProps) => {
 	const setIsStreaming = useStreamResponse((state) => state.setIsStreaming);
-	const cancelGeneration = () => {
-		fetch("/api/openai", {
-			method: "DELETE",
-		});
-		toast.success("The recipe has been stopped");
+	const cancelGeneration = async () => {
+		// const res = await fetch("/api/openai", { method: "DELETE" });
+		// console.log("AbortGenerationButton", res);
+		// toast.success("The recipe has been stopped");
 		setIsStreaming(false);
 		return;
 	};

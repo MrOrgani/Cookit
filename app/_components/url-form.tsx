@@ -16,7 +16,7 @@ import * as z from "zod";
 
 import { useStreamResponse } from "@/store/use-stream-response";
 import { useUserPreferences } from "@/store/use-user-preferences";
-import { AbortGenerationButton } from "./abort-generation-button";
+// import { AbortGenerationButton } from "./abort-generation-button";
 
 const formSchema = z.object({
 	url: z.string().url(),
@@ -130,17 +130,17 @@ export const UrlForm = ({ children }: UrlFormProps) => {
 							)}
 						/>
 						<div className="flex items-center gap-x-2 justify-center">
-							{isStreaming ? (
+							{/* {isStreaming ? (
 								<AbortGenerationButton />
-							) : (
-								<Button
-									className="shadow-[3px_3px_0px_rgba(0,0,0,1)]"
-									type="submit"
-									disabled={!isValid || isSubmitting}
-								>
-									Go !
-								</Button>
-							)}
+							) : ( */}
+							<Button
+								className="shadow-[3px_3px_0px_rgba(0,0,0,1)]"
+								type="submit"
+								disabled={!isValid || isSubmitting}
+							>
+								Go !
+							</Button>
+							{/* )} */}
 							{children}
 						</div>
 					</form>
