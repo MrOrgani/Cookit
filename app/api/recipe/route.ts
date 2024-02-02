@@ -26,9 +26,11 @@ export async function POST(req: Request) {
 
 		return NextResponse.json(myDivString);
 	} catch (error: any) {
-		console.log("[RECIPE]", error);
-		return new NextResponse(error.message, {
-			status: 500,
-		});
+		return NextResponse.json(
+			{ error: "No recipe found" },
+			{
+				status: 404,
+			}
+		);
 	}
 }
