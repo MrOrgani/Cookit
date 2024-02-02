@@ -1,4 +1,4 @@
-<img width="1031" alt="image" src="https://github.com/MrOrgani/cookit/assets/42295371/a1fc20ff-9bb6-463f-a3dc-910dbb47b59e">
+<img width="1503" alt="image" src="https://github.com/MrOrgani/Cookit/assets/42295371/359366b5-db08-4ea3-8f66-ad26004066fb">
 
 https://findit-pasteit-cookit.vercel.app/
 
