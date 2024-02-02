@@ -16,6 +16,7 @@ import * as z from "zod";
 
 import { useStreamResponse } from "@/store/use-stream-response";
 import { useUserPreferences } from "@/store/use-user-preferences";
+import { AbortGenerationButton } from "./abort-generation-button";
 
 const formSchema = z.object({
 	url: z.string().url(),
@@ -28,6 +29,7 @@ interface UrlFormProps {
 export const UrlForm = ({ children }: UrlFormProps) => {
 	const setHtmlCode = useStreamResponse((state) => state.setHtmlCode);
 	const removeHtmlCode = useStreamResponse((state) => state.removeHtmlCode);
+	const isStreaming = useStreamResponse((state) => state.isStreaming);
 	const setIsStreaming = useStreamResponse((state) => state.setIsStreaming);
 
 	const apikey = useUserPreferences((state) => state.apiKey);
@@ -48,31 +50,42 @@ export const UrlForm = ({ children }: UrlFormProps) => {
 				setOpenSettings(true);
 				return;
 			}
+			removeHtmlCode();
 
 			const getRecipeResponse = await fetch("/api/recipe", {
 				method: "POST",
 				body: JSON.stringify({ url }),
 			});
 			const recipeAsHtmlText = await getRecipeResponse.json();
+			if (recipeAsHtmlText.error) throw new Error(recipeAsHtmlText.error);
 
-			const res = await fetch(`/api/recipe/openai`, {
+			toast.success("Your recipe has been fetched");
+
+			const res = await fetch(`/api/openai`, {
 				method: "POST",
 				body: JSON.stringify({ recipeAsHtmlText, apikey, language, unit }),
 			});
 
 			const body = res.body;
 
-			if (!res.ok || !body) throw new Error("Something went wrong");
+			if (!body) throw new Error("Something went wrong");
 
 			toast.success("Recipe is being processed");
 			setIsStreaming(true);
-			removeHtmlCode();
 			const reader = body.getReader();
 
 			const getReaderChuck = async () => {
 				const { done, value } = await reader.read();
+
+				const abortedGeneration = done && !isStreaming;
+				if (abortedGeneration) {
+					toast.success("The recipe has been stopped");
+					return;
+				}
+
 				if (done) {
 					setIsStreaming(false);
+					toast.success("The recipe has been processed successfully!");
 					return;
 				}
 				const newChunk = new TextDecoder("utf-8").decode(value);
@@ -82,9 +95,9 @@ export const UrlForm = ({ children }: UrlFormProps) => {
 				});
 			};
 
-			await getReaderChuck();
-		} catch (error) {
-			toast.error("Something went wrong");
+			getReaderChuck();
+		} catch (error: any) {
+			toast.error(error.message);
 		}
 	};
 
@@ -117,13 +130,17 @@ export const UrlForm = ({ children }: UrlFormProps) => {
 							)}
 						/>
 						<div className="flex items-center gap-x-2 justify-center">
-							<Button
-								className="shadow-[3px_3px_0px_rgba(0,0,0,1)]"
-								type="submit"
-								disabled={!isValid || isSubmitting}
-							>
-								Go !
-							</Button>
+							{isStreaming ? (
+								<AbortGenerationButton />
+							) : (
+								<Button
+									className="shadow-[3px_3px_0px_rgba(0,0,0,1)]"
+									type="submit"
+									disabled={!isValid || isSubmitting}
+								>
+									Go !
+								</Button>
+							)}
 							{children}
 						</div>
 					</form>

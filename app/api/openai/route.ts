@@ -82,7 +82,7 @@ export async function POST(req: Request) {
 		const stream = OpenAIStream(res);
 		return new StreamingTextResponse(stream);
 	} catch (error: any) {
-		console.log("[RECIPE OPENAI]", error);
+		console.log("[OPENAI]: POST", error);
 		return new NextResponse(error.message, {
 			status: 500,
 		});
@@ -90,11 +90,18 @@ export async function POST(req: Request) {
 }
 
 export function DELETE() {
-	if (controller) {
-		controller.abort();
+	try {
+		if (controller) {
+			controller.abort();
+			controller = null;
+		}
+		return new NextResponse("Request aborted", {
+			status: 200,
+		});
+	} catch (error: any) {
+		console.log("[OPENAI]: DELETE", error);
+		return new NextResponse(error.message, {
+			status: 500,
+		});
 	}
-	controller = null;
-	return new NextResponse("Request aborted", {
-		status: 200,
-	});
 }
