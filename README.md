@@ -1,4 +1,4 @@
-<video src="https://github.com/MrOrgani/cookit/assets/42295371/b32e9ea3-7037-4951-bd97-db4aae49f8c0" width="500" higth="300" />
+https://github.com/MrOrgani/cookit/assets/42295371/b32e9ea3-7037-4951-bd97-db4aae49f8c0.mp4
 
 https://findit-pasteit-cookit.vercel.app/
 
